@@ -45,6 +45,7 @@ public:
     return index_meta_;
   }
 
+
   /**
    * @brief 插入一条数据
    * 
@@ -104,4 +105,5 @@ public:
    */
   virtual RC next_entry(RID *rid) = 0;
   virtual RC destroy() = 0;
+  virtual RC drop() = 0;
 };

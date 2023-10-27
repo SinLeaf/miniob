@@ -125,6 +125,28 @@ RC Table::create(int32_t table_id,
   LOG_INFO("Successfully create table %s:%s", base_dir, name);
   return rc;
 }
+RC Table::drop(const char *path){
+  RC rc = RC::SUCCESS;
+  //destory indexs first
+  for (Index *index : indexes_){
+    index->drop();  //TODO
+  }
+
+  //destory record handler
+  rc = record_handler_->delete_record();
+  delete record_handler_;
+  record_handler_ = nullptr;
+
+  //destory buffer pool and remove data file
+  std::string data_file = table_data_file(base_dir_,name);
+  BufferPoolManager &bfm = BufferPoolManager::instance();
+  rc =bfm.remove_file(data_file.c_str());  //TODO
+
+  //remove meta file
+  int remove_ret =  ::remove(path);
+  return rc;
+}
+
 
 RC Table::open(const char *meta_file, const char *base_dir)
 {

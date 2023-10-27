@@ -30,3 +30,12 @@ public:
 
   RC execute(SQLStageEvent *sql_event);
 };
+
+class DROPTableExecutor
+{
+public:
+  DROPTableExecutor() = default;
+  virtual ~DROPTableExecutor() = default;
+
+  RC execute(SQLStageEvent *sql_event);
+};

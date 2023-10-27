@@ -873,6 +873,22 @@ RC BplusTreeHandler::close()
   return RC::SUCCESS;
 }
 
+RC BplusTreeHandler::drop(){
+  RC rc = RC::SUCCESS;
+  if (disk_buffer_pool_ != nullptr) {
+
+    BufferPoolManager &bfm = BufferPoolManager::instance();
+    rc = bfm.remove_file(disk_buffer_pool_->file_name().c_str());
+
+    delete mem_pool_item_;
+    mem_pool_item_ = nullptr;
+  }
+
+  disk_buffer_pool_ = nullptr;
+  return RC::SUCCESS;
+}
+
+
 RC BplusTreeHandler::print_leaf(Frame *frame)
 {
   LeafIndexNodeHandler leaf_node(file_header_, frame);
@@ -1868,6 +1884,7 @@ RC BplusTreeScanner::close()
   LOG_TRACE("bplus tree scanner closed");
   return RC::SUCCESS;
 }
+
 
 RC BplusTreeScanner::fix_user_key(
     const char *user_key, int key_len, bool want_greater, char **fixed_key, bool *should_inclusive)
